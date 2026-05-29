@@ -1,6 +1,9 @@
 # Email protection test
 
-Single Next.js page to test Cloudflare **Email Address Obfuscation** (email protection).
+Single Next.js page with two emails:
+
+1. **Protected** — normal `mailto:` (Cloudflare obfuscates)
+2. **Exempt** — wrapped in `<!--email_off-->...<!--/email_off-->` (stays plain)
 
 ## Run locally
 
@@ -18,10 +21,9 @@ Open http://localhost:3000 — the email stays plain locally (Cloudflare is not 
 3. Enable **Email Address Obfuscation** (Security → Settings → Client-side abuse).
 4. Open the live site → **View Page Source**.
 
-**When protection is working**, the email is often rewritten to something like:
+**When protection is working** (`curl` or View Page Source):
 
-```html
-<a href="/cdn-cgi/l/email-protection#...">...</a>
-```
-
-The page still shows a normal email in the browser; protection is in the HTML source.
+| Email | Expected in HTML |
+|-------|-------------------|
+| `contact@example.com` | `/cdn-cgi/l/email-protection#...` + decode script |
+| `exempt@example.com` | Plain with `<!--email_off-->` comments |

@@ -5,6 +5,16 @@ body {
   padding: 0 1rem;
   line-height: 1.6;
 }
+section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
 .note {
   color: #555;
   font-size: 0.9rem;
