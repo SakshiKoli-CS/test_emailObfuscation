@@ -1,53 +1,27 @@
-# Email obfuscation test (Next.js + Amplify + Cloudflare)
+# Email protection test
 
-Simple **Next.js Pages Router** app to compare Cloudflare email obfuscation on vs off.
+Single Next.js page to test Cloudflare **Email Address Obfuscation** (email protection).
 
-```html
-<!--email_off-->contact@example.com<!--/email_off-->
-```
-
-| Route | Purpose |
-|-------|---------|
-| `/` | Hub and setup |
-| `/obfuscation-on` | Obfuscation **on** |
-| `/obfuscation-off` | Obfuscation **off** (via Cloudflare path rule) |
-
-## Local development
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000. Cloudflare does not run locally — all emails stay plain in source.
+Open http://localhost:3000 — the email stays plain locally (Cloudflare is not in the path).
 
-## Deploy on AWS Amplify
+## Test on Cloudflare
 
-1. Push this repo to GitHub.
-2. Amplify Console → **Create app** → connect repo.
-3. Amplify detects Next.js; `amplify.yml` runs `npm ci` and `npm run build`.
-4. In Amplify app settings, use the **Next.js - SSR** hosting option if prompted (Amplify Hosting supports Next.js).
+1. Deploy to AWS Amplify.
+2. Point your **proxied** custom domain through Cloudflare (orange cloud).
+3. Enable **Email Address Obfuscation** (Security → Settings → Client-side abuse).
+4. Open the live site → **View Page Source**.
 
-Add your custom domain in Amplify, then proxy the domain through **Cloudflare** (orange cloud).
+**When protection is working**, the email is often rewritten to something like:
 
-## Cloudflare
+```html
+<a href="/cdn-cgi/l/email-protection#...">...</a>
+```
 
-**Zone default:** Email Address Obfuscation → **On**
-
-**Configuration rule** for the OFF test:
-
-- When: URI Path starts with `/obfuscation-off`
-- Then: Email Address Obfuscation → **Off**
-
-Purge cache, then **View Page Source** on:
-
-- `https://your-domain/obfuscation-on`
-- `https://your-domain/obfuscation-off`
-
-## `email_off` in JSX
-
-HTML comments cannot be written as JSX `{/* ... */}` — they are stripped from output. The test pages use `dangerouslySetInnerHTML` so the literal `<!--email_off-->` comments appear in the HTML Cloudflare receives.
-
-## References
-
-- [Cloudflare: Email Address Obfuscation](https://developers.cloudflare.com/waf/tools/scrape-shield/email-address-obfuscation/)
+The page still shows a normal email in the browser; protection is in the HTML source.
